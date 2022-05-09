@@ -1,5 +1,5 @@
 #切勿使用驼峰法命名键值
-mode: dev #当前模式 dev || prod
+mode: prod #当前模式 dev || prod
 addr: ":10002"
 login:
   username: "admin"

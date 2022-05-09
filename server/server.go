@@ -70,6 +70,7 @@ func (s *Server) Run() {
 	s.Initialize()
 	s.Router()
 	if err := s.Gin.Run(global.Config.Addr); err != nil {
+		global.Log.Errorf("server run error: %s", err.Error())
 		log.Fatalf("Error in ListenAndServe: %v", err)
 	}
 }
