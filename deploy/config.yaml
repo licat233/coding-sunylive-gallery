@@ -1,9 +1,9 @@
 #切勿使用驼峰法命名键值
-mode: prod #当前模式 dev || prod
+mode: dev #当前模式 dev || prod
 addr: ":10002"
 login:
-  passport: "sunylive"
-  password: "suny.live"
+  username: "admin"
+  password: "123456"
 zap:
   log-dir: logs
   log-file: server.log

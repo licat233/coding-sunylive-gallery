@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"sunylive-gallery/errorx"
 	"sunylive-gallery/global"
+	"sunylive-gallery/respx"
 
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,24 +16,26 @@ func (l *Logic) LoginPage(ctx *gin.Context) {
 	})
 }
 
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 func (l *Logic) Login(ctx *gin.Context) {
-	usn := ctx.PostForm("username")
-	pwd := ctx.PostForm("password")
-	if string(usn) != global.Config.Passport || string(pwd) != global.Config.Password {
-		global.Log.Errorf("Login error, password:%s | password: %s", usn, pwd)
+	var req = new(LoginRequest)
+	err := ctx.BindJSON(req)
+	if err != nil {
+		errorx.ExternalError(ctx, err)
+		return
+	}
+	if req.Username != global.Config.Username || req.Password != global.Config.Password {
+		global.Log.Errorf("Login error, username:%s | password: %s", req.Username, req.Password)
 		errorx.ExternalError(ctx, errors.New("username or password is incorrect"))
 		return
 	}
-	sessions.Default(ctx).Set("isLogin", true)
-	ctx.Redirect(http.StatusMovedPermanently, "/")
-	return
-}
+	SetUserStatus(ctx, true)
 
-func (l *Logic) LoginVerify(ctx *gin.Context) bool {
-	if v, ok := sessions.Default(ctx).Get("isLogin").(bool); ok {
-		if v {
-			return true
-		}
-	}
-	return false
+	ctx.JSON(http.StatusOK, respx.StateResp("登录成功"))
+	ctx.Abort()
+	return
 }

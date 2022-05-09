@@ -9,10 +9,10 @@ import (
 )
 
 var (
-	Config   *config.Config
-	Log      *zap.SugaredLogger
-	DB       *gorm.DB
-	Redis    *redis.Client
-	RootPath string
-	Mode     string
+	Config      *config.Config
+	Log         *zap.SugaredLogger
+	DB          *gorm.DB
+	Redis       *redis.Client
+	RootPath    string
+	ReleaseMode bool
 )

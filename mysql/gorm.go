@@ -101,7 +101,7 @@ func NewWriter(w logger.Writer) *writer {
 // Printf 格式化打印日志，实现 Writer 接口
 func (w *writer) Printf(message string, data ...interface{}) {
 	global.Log.Info(fmt.Sprintf("【GORM日志】"+message+"\n", data...))
-	if viper.GetString("model") == "dev" {
+	if !global.ReleaseMode {
 		w.Writer.Printf(message, data...)
 	}
 }

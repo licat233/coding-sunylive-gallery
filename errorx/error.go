@@ -37,11 +37,11 @@ func New(msg string, err error) string {
 
 func InternalError(c *gin.Context, err error) {
 	msg := "服务器内部错误"
-	if global.Mode == "dev" {
+	if global.ReleaseMode {
 		msg = New("服务器内部错误", err)
 	}
 	c.JSON(http.StatusInternalServerError, gin.H{
-		"status":  false,
+		"success": false,
 		"code":    http.StatusInternalServerError,
 		"message": msg,
 	})
@@ -50,11 +50,11 @@ func InternalError(c *gin.Context, err error) {
 
 func ExternalError(c *gin.Context, err error) {
 	msg := "请求参数错误"
-	if global.Mode == "dev" {
+	if !global.ReleaseMode {
 		msg = New("请求参数错误", err)
 	}
 	c.JSON(http.StatusBadRequest, gin.H{
-		"status":  false,
+		"success": false,
 		"code":    http.StatusBadRequest,
 		"message": msg,
 	})

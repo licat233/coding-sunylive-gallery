@@ -21,7 +21,7 @@ func Initialize() {
 	initConfig()
 	initLog()
 	initGorm()
-
+	initMode()
 }
 
 func initViper() {
@@ -38,7 +38,7 @@ func initViper() {
 
 func initConfig() {
 	global.Config = &config.Config{
-		Passport: viper.GetString("login.passport"),
+		Username: viper.GetString("login.username"),
 		Password: viper.GetString("login.password"),
 		Addr:     viper.GetString("addr"),
 	}
@@ -57,8 +57,8 @@ func initRootPath() {
 }
 
 func initMode() {
-	global.Mode = viper.GetString("model")
-	if global.Mode == "" {
-		global.Mode = "prod"
+	modename := viper.GetString("mode")
+	if modename == "prod" || modename == "pro" || modename == "release" {
+		global.ReleaseMode = true
 	}
 }

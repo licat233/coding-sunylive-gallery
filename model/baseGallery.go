@@ -18,7 +18,7 @@ func NewGalleryModel() *GalleryModel {
 }
 
 func (m *GalleryModel) baseModel() *gorm.DB {
-	return m.DB.WithContext(m.ctx).Model(Gallery{})
+	return m.DB.WithContext(m.ctx).Model(&Gallery{})
 }
 
 func (m *GalleryModel) Insert(gallery *Gallery) error {
@@ -27,12 +27,16 @@ func (m *GalleryModel) Insert(gallery *Gallery) error {
 
 //查询是否存在
 func (m *GalleryModel) IsExist(url string) (bool, error) {
-	err := m.baseModel().Where("url = ?", url).First(Gallery{}).Error
+	var count int64
+	err := m.baseModel().Where("url = ?", url).Limit(1).Count(&count).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return false, nil
 	} else if err != nil {
 		global.Log.Errorf("gorm查询数据出错 IsExist error: %s", err.Error())
 		return false, err
+	}
+	if count == 0 {
+		return false, nil
 	}
 	return true, nil
 }
